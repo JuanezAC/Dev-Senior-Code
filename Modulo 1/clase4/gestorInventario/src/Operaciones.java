@@ -2,41 +2,100 @@ import java.util.Scanner;
 
 public class Operaciones {
 
-    static String nombre = "";
-    static int cantidad = 0;
-    static double precio = 0.0;
+    // static String nombre = "";
+    // static int cantidad = 0;
+    // static double precio = 0.0;
+
+    static final int MAX = 50;
+    static String[] nombres = new String[MAX];
+    static int[] cantidades = new int[MAX];
+    static double[] precios = new double[MAX];
+    static int total = 0;
+
     static boolean hayProducto = false;
 
+    // public static void registrar(Scanner sc) {
+    //     if(!Validador.hayProducto(hayProducto)) {
+    //         nombre = Validador.leerTexto(sc, "Nombre del producto: ");
+    //         cantidad = Validador.leerEntero(sc, "Cantidad: ");
+    //         precio = Validador.leerDecimal(sc, "Precio unitario: ");
+    //         hayProducto = true;
+    //         System.out.println("Producto registrado correctamente.");
+    //     }
+    // }
+
     public static void registrar(Scanner sc) {
-        if(!Validador.hayProducto(hayProducto)) {
-            nombre = Validador.leerTexto(sc, "Nombre del producto: ");
-            cantidad = Validador.leerEntero(sc, "Cantidad: ");
-            precio = Validador.leerDecimal(sc, "Precio unitario: ");
-            hayProducto = true;
-            System.out.println("Producto registrado correctamente.");
+        if (total == MAX) {
+            System.out.println("Inventario lleno. No se pueden agregar mas productos.");
+            return;
+        }
+        nombres[total] = Validador.leerTexto(sc, "Nombre del producto: ");
+        cantidades[total] = Validador.leerEntero(sc, "Cantidad: ");
+        precios[total] = Validador.leerDecimal(sc, "Precio unitario: ");
+        total++;
+        System.out.println("Producto registrado correctamente.");
+    }
+
+    // public static void ver() {
+    //     Validador.hayProducto(hayProducto);
+
+    //     System.out.println("Producto: " + nombre);
+    //     System.out.println("Cantidad: " + cantidad);
+    //     System.out.println("Precio:   " + precio);
+    // }
+
+    public static void listar() {
+        if (total == 0) {
+            System.out.println("Aun no hay productos registrados.");
+            return;
+        }
+        System.out.println("--- INVENTARIO ---");
+        for (int i = 0; i < total; i++) {
+            System.out.println((i + 1) + ". " + nombres[i]
+                    + " | cant: " + cantidades[i]
+                    + " | precio: " + precios[i]);
         }
     }
 
-    public static void ver() {
-        Validador.hayProducto(hayProducto);
+    // public static void actualizarCantidad(Scanner sc) {
+    //     Validador.hayProducto(hayProducto);
 
-        System.out.println("Producto: " + nombre);
-        System.out.println("Cantidad: " + cantidad);
-        System.out.println("Precio:   " + precio);
-    }
+    //     cantidad = Validador.leerEntero(sc, "Nueva cantidad: ");
+    //     System.out.println("Cantidad actualizada.");
+    // }
 
     public static void actualizarCantidad(Scanner sc) {
-        Validador.hayProducto(hayProducto);
-
-        cantidad = Validador.leerEntero(sc, "Nueva cantidad: ");
+        if (total == 0) {
+            System.out.println("Aun no hay productos registrados.");
+            return;
+        }
+        listar();
+        int pos = Validador.leerEntero(sc, "Numero del producto a actualizar: ");
+        if (pos < 1 || pos > total) {
+            System.out.println("Ese numero no existe en el inventario.");
+            return;
+        }
+        cantidades[pos - 1] = Validador.leerEntero(sc, "Nueva cantidad: ");
         System.out.println("Cantidad actualizada.");
     }
 
+    // public static void verValorTotal() {
+    //     Validador.hayProducto(hayProducto);
+
+    //     double total = cantidad * precio;
+    //     System.out.println("Valor total en inventario: " + total);
+    // }
+
     public static void verValorTotal() {
-        Validador.hayProducto(hayProducto);
-
-        double total = cantidad * precio;
-        System.out.println("Valor total en inventario: " + total);
+        if (total == 0) {
+            System.out.println("Aun no hay productos registrados.");
+            return;
+        }
+        double suma = 0;
+        for (int i = 0; i < total; i++) {
+            suma = suma + (cantidades[i] * precios[i]);
+        }
+        System.out.println("Valor total del inventario: " + suma);
     }
-
 }
+
